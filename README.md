@@ -144,7 +144,7 @@ docker run -p 8000:8000 casbin/casdoor-all-in-one
 - **Docker Compose** (with your `conf/app.conf` next to `docker-compose.yml`):
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) and sign in with `built-in/admin` / `123` on a fresh install.

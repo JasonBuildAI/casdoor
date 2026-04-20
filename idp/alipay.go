@@ -23,6 +23,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -30,22 +31,40 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-pay/gopay/alipay"
 	"golang.org/x/oauth2"
 )
 
 type AlipayIdProvider struct {
-	Client *http.Client
-	Config *oauth2.Config
+	Client     *http.Client
+	Config     *oauth2.Config
+	AppCertSN  string
+	RootCertSN string
 }
 
 // NewAlipayIdProvider ...
-func NewAlipayIdProvider(clientId string, clientSecret string, redirectUrl string) *AlipayIdProvider {
+func NewAlipayIdProvider(clientId string, clientSecret string, redirectUrl string, appCert string, rootCert string) (*AlipayIdProvider, error) {
 	idp := &AlipayIdProvider{}
 
 	config := idp.getConfig(clientId, clientSecret, redirectUrl)
 	idp.Config = config
 
-	return idp
+	if appCert != "" {
+		sn, err := alipay.GetCertSN([]byte(appCert))
+		if err != nil {
+			return nil, fmt.Errorf("failed to compute app_cert_sn: %w", err)
+		}
+		idp.AppCertSN = sn
+	}
+	if rootCert != "" {
+		sn, err := alipay.GetRootCertSN([]byte(rootCert))
+		if err != nil {
+			return nil, fmt.Errorf("failed to compute alipay_root_cert_sn: %w", err)
+		}
+		idp.RootCertSN = sn
+	}
+
+	return idp, nil
 }
 
 // SetHttpClient ...
@@ -71,12 +90,24 @@ func (idp *AlipayIdProvider) getConfig(clientId string, clientSecret string, red
 	return config
 }
 
+type AlipayErrorResponse struct {
+	Code    string `json:"code"`
+	Msg     string `json:"msg"`
+	SubCode string `json:"sub_code"`
+	SubMsg  string `json:"sub_msg"`
+}
+
 type AlipayAccessToken struct {
-	Response AlipaySystemOauthTokenResponse `json:"alipay_system_oauth_token_response"`
-	Sign     string                         `json:"sign"`
+	Response      AlipaySystemOauthTokenResponse `json:"alipay_system_oauth_token_response"`
+	ErrorResponse AlipayErrorResponse            `json:"error_response"`
+	Sign          string                         `json:"sign"`
 }
 
 type AlipaySystemOauthTokenResponse struct {
+	Code         string `json:"code"`
+	Msg          string `json:"msg"`
+	SubCode      string `json:"sub_code"`
+	SubMsg       string `json:"sub_msg"`
 	AccessToken  string `json:"access_token"`
 	AlipayUserId string `json:"alipay_user_id"`
 	ExpiresIn    int    `json:"expires_in"`
@@ -107,6 +138,21 @@ func (idp *AlipayIdProvider) GetToken(code string) (*oauth2.Token, error) {
 	err = json.Unmarshal(data, pToken)
 	if err != nil {
 		return nil, err
+	}
+
+	if pToken.Response.AccessToken == "" {
+		errResp := pToken.ErrorResponse
+		if errResp.Code == "" {
+			errResp.Code = pToken.Response.Code
+			errResp.SubCode = pToken.Response.SubCode
+			errResp.Msg = pToken.Response.Msg
+			errResp.SubMsg = pToken.Response.SubMsg
+		}
+		errMsg := errResp.Msg
+		if errResp.SubMsg != "" {
+			errMsg = errResp.SubMsg
+		}
+		return nil, fmt.Errorf("alipay GetToken error: code=%s, sub_code=%s, msg=%s", errResp.Code, errResp.SubCode, errMsg)
 	}
 
 	token := &oauth2.Token{
@@ -166,11 +212,16 @@ func (idp *AlipayIdProvider) GetUserInfo(token *oauth2.Token) (*UserInfo, error)
 		return nil, err
 	}
 
+	resp := atUserInfo.AlipayUserInfoShareResponse
+	if resp.Code != "10000" {
+		return nil, fmt.Errorf("alipay GetUserInfo error: code=%s, msg=%s", resp.Code, resp.Msg)
+	}
+
 	userInfo := UserInfo{
-		Id:          atUserInfo.AlipayUserInfoShareResponse.UserId,
-		Username:    atUserInfo.AlipayUserInfoShareResponse.NickName,
-		DisplayName: atUserInfo.AlipayUserInfoShareResponse.NickName,
-		AvatarUrl:   atUserInfo.AlipayUserInfoShareResponse.Avatar,
+		Id:          resp.UserId,
+		Username:    resp.NickName,
+		DisplayName: resp.NickName,
+		AvatarUrl:   resp.Avatar,
 	}
 
 	return &userInfo, nil
@@ -191,6 +242,13 @@ func (idp *AlipayIdProvider) postWithBody(body interface{}, targetUrl string) ([
 	formData := url.Values{}
 	for k := range bodyJson {
 		formData.Set(k, bodyJson[k].(string))
+	}
+
+	if idp.AppCertSN != "" {
+		formData.Set("app_cert_sn", idp.AppCertSN)
+	}
+	if idp.RootCertSN != "" {
+		formData.Set("alipay_root_cert_sn", idp.RootCertSN)
 	}
 
 	sign, err := rsaSignWithRSA256(getStringToSign(formData), idp.Config.ClientSecret)

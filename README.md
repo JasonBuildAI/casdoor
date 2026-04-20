@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://casdoor.org">
+  <a href="https://casdoor.ai">
     <img src="https://cdn.casbin.org/img/casdoor-logo_1185x256.png" alt="Casdoor" width="500">
   </a>
 
@@ -84,7 +84,7 @@
 <a id="why-casdoor"></a>
 ## Why Casdoor
 
-Casdoor is a **UI-first** identity provider and access management platform: one place to manage users, organizations, applications, and providers, with a modern web console. Authorization policies can be expressed with **[Casbin](https://casbin.org/)** (ACL, RBAC, ABAC, and more). Unlike reverse-proxy-centric auth companions, Casdoor is a dedicated auth server with broad protocol support—closer in role to full IdPs such as Keycloak or Authelia-style SSO stacks, while staying easy to self-host and integrate via docs at **[casdoor.org](https://casdoor.org)**.
+Casdoor is a **UI-first** identity provider and access management platform: one place to manage users, organizations, applications, and providers, with a modern web console. Authorization policies can be expressed with **[Casbin](https://casbin.org/)** (ACL, RBAC, ABAC, and more). Unlike reverse-proxy-centric auth companions, Casdoor is a dedicated authentication server with broad protocol support—closer in role to a full IdP than a sidecar-only proxy—so you can self-host and integrate with a single place for users, apps, and providers. See **[casdoor.ai](https://casdoor.ai)** for documentation.
 
 ---
 
@@ -128,10 +128,9 @@ go run main.go
 
 5. Open [http://localhost:8000](http://localhost:8000) and sign in with `built-in/admin` / `123` on a fresh install (change password immediately in production).
 
-Official guide: [Server installation](https://casdoor.org/docs/basic/server-installation)
+Official guide: [Server installation](https://casdoor.ai/docs/basic/server-installation)
 
-<details>
-<summary><b>🐳 Docker</b></summary>
+### 🐳 Docker
 
 Use one of the official Docker paths:
 
@@ -144,27 +143,24 @@ docker run -p 8000:8000 casbin/casdoor-all-in-one
 - **Docker Compose** (with your `conf/app.conf` next to `docker-compose.yml`):
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) and sign in with `built-in/admin` / `123` on a fresh install.
 
-Official guide: [Try with Docker](https://casdoor.org/docs/basic/try-with-docker)
-</details>
+Official guide: [Try with Docker](https://casdoor.ai/docs/basic/try-with-docker)
 
-<details>
-<summary><b>☸️ Kubernetes Helm</b></summary>
+### ☸️ Kubernetes Helm
 
 With Helm v3 and a running Kubernetes cluster:
 
 ```bash
-helm install casdoor oci://registry-1.docker.io/casbin/casdoor-helm-charts --version v1.702.0
+helm install casdoor oci://registry-1.docker.io/casbin/casdoor-helm-charts
 ```
 
-After installation, access Casdoor through your cluster service/ingress.
+After installation, access Casdoor through your cluster service/ingress. Pin a chart version with `--version` when you need reproducible installs; the official guide lists the current chart and cluster-specific options.
 
-Official guide: [Try with Helm](https://casdoor.org/docs/basic/try-with-helm)
-</details>
+Official guide: [Try with Helm](https://casdoor.ai/docs/basic/try-with-helm)
 
 ---
 
@@ -233,7 +229,7 @@ Casdoor is built as a **frontend–backend separated** project:
 
 - **Web UI**: JavaScript and **React** ([`web/`](https://github.com/casdoor/casdoor/tree/master/web))
 - **API server**: **Go** with **Beego**, RESTful APIs ([repository root](https://github.com/casdoor/casdoor))
-- **Data**: mainstream databases including **MySQL**, **PostgreSQL**, and others ([overview](https://casdoor.org/docs/overview))
+- **Data**: mainstream databases including **MySQL**, **PostgreSQL**, and others ([overview](https://casdoor.ai/docs/overview))
 - **Cache**: optional **Redis** for session/cache-style deployments (configure as needed)
 
 ---
@@ -245,17 +241,17 @@ Casdoor is built as a **frontend–backend separated** project:
 
 **Install**
 
-- [Install from source](https://casdoor.org/docs/basic/server-installation)
-- [Install with Docker](https://casdoor.org/docs/basic/try-with-docker)
-- [Install with Kubernetes Helm](https://casdoor.org/docs/basic/try-with-helm)
+- [Install from source](https://casdoor.ai/docs/basic/server-installation)
+- [Install with Docker](https://casdoor.ai/docs/basic/try-with-docker)
+- [Install with Kubernetes Helm](https://casdoor.ai/docs/basic/try-with-helm)
 
 **Connect applications**
 
-- [How to connect to Casdoor](https://casdoor.org/docs/how-to-connect/overview)
+- [How to connect to Casdoor](https://casdoor.ai/docs/how-to-connect/overview)
 
 **APIs**
 
-- [Public API](https://casdoor.org/docs/basic/public-api)
+- [Public API](https://casdoor.ai/docs/basic/public-api)
 - [Swagger UI](https://door.casdoor.com/swagger) (live API explorer)
 
 ---
@@ -275,7 +271,7 @@ Casdoor integrates with common languages and frameworks:
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" width="40" alt="Angular">
 </p>
 
-Browse the full list: [Integrations](https://casdoor.org/docs/category/integrations).
+Browse the full list: [Integrations](https://casdoor.ai/docs/category/integrations).
 
 ---
 
@@ -290,7 +286,7 @@ Please do **not** report security vulnerabilities in public GitHub issues. See [
 ## 🤝 Community and support
 
 - **Discord**: [Join our community](https://discord.gg/5rPsrAzK7S)
-- **Contact**: [casdoor.org/help](https://casdoor.org/help)
+- **Contact**: [casdoor.ai/help](https://casdoor.ai/help)
 - **Issues**: [GitHub Issues](https://github.com/casdoor/casdoor/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/casdoor/casdoor/discussions)
 
@@ -301,7 +297,7 @@ Please do **not** report security vulnerabilities in public GitHub issues. See [
 
 If you have questions about Casdoor, you can **[open an issue](https://github.com/casdoor/casdoor/issues)**. Pull requests are welcome; **we recommend opening an issue first** so you can align with maintainers and the community before larger changes.
 
-Please also read our [contribution guidelines](https://opensource.guide/) before contributing.
+Please also read our [contribution guidelines](https://casdoor.ai/docs/contributing/) before contributing.
 
 ### Translation and i18n
 

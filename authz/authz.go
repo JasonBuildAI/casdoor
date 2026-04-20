@@ -50,6 +50,8 @@ p, *, *, POST, /api/sso-logout, *, *
 p, *, *, GET, /api/sso-logout, *, *
 p, *, *, POST, /api/callback, *, *
 p, *, *, POST, /api/device-auth, *, *
+p, *, *, POST, /api/cancel-device-auth, *, *
+p, *, *, POST, /api/device-auth-complete, *, *
 p, *, *, GET, /api/get-account, *, *
 p, *, *, GET, /api/userinfo, *, *
 p, *, *, GET, /api/user, *, *
@@ -182,13 +184,6 @@ func IsAllowed(subOwner string, subName string, method string, urlPath string, o
 		}
 
 		if user.IsAdmin && subOwner == objOwner {
-			return true
-		}
-
-		// Organization id is owner/name (e.g. admin/casbin) where name is the org name.
-		// User.Owner is the organization name, not the organization's Owner field, so
-		// subOwner == objOwner does not hold for org admins. Allow org admins to read their org.
-		if method == "GET" && urlPath == "/api/get-organization" && user.IsAdmin && user.Owner == objName {
 			return true
 		}
 	}

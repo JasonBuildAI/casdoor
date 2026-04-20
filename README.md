@@ -3,7 +3,8 @@
     <img src="https://cdn.casbin.org/img/casdoor-logo_1185x256.png" alt="Casdoor" width="500">
   </a>
 
-  <h3>Casdoor: AI-First Identity and Access Management (IAM) / AI MCP Gateway</h3>
+  <h1>Casdoor</h1>
+  <h3>AI-First Identity and Access Management (IAM) / AI MCP Gateway</h3>
 
   <p align="center">
     <strong>An open-source, AI-first IAM / MCP gateway and authentication server with a web UI.</strong><br>
@@ -83,7 +84,7 @@
 <a id="why-casdoor"></a>
 ## Why Casdoor
 
-Casdoor is a **UI-first** identity provider and access management platform: one place to manage users, organizations, applications, and providers, with a modern web console. Authorization policies can be expressed with **[Casbin](https://casbin.org/)** (ACL, RBAC, ABAC, and more). Unlike reverse-proxy-centric auth companions, Casdoor is a dedicated auth server with broad protocol support, designed to be straightforward to self-host and integrate—see **[casdoor.ai](https://casdoor.ai)** for documentation.
+Casdoor is a **UI-first** identity provider and access management platform: one place to manage users, organizations, applications, and providers, with a modern web console. Authorization policies can be expressed with **[Casbin](https://casbin.org/)** (ACL, RBAC, ABAC, and more). Unlike reverse-proxy-centric auth companions, Casdoor is a dedicated authentication server with broad protocol support—closer in role to a full IdP than a sidecar-only proxy—so you can self-host and integrate with a single place for users, apps, and providers. See **[casdoor.ai](https://casdoor.ai)** for documentation.
 
 ---
 
@@ -157,7 +158,7 @@ With Helm v3 and a running Kubernetes cluster:
 helm install casdoor oci://registry-1.docker.io/casbin/casdoor-helm-charts
 ```
 
-After installation, access Casdoor through your cluster service/ingress. The official guide covers chart versions (including optional `--version`) and cluster-specific settings.
+After installation, access Casdoor through your cluster service/ingress. Pin a chart version with `--version` when you need reproducible installs; the official guide lists the current chart and cluster-specific options.
 
 Official guide: [Try with Helm](https://casdoor.ai/docs/basic/try-with-helm)
 
@@ -271,6 +272,13 @@ Casdoor integrates with common languages and frameworks:
 </p>
 
 Browse the full list: [Integrations](https://casdoor.ai/docs/category/integrations).
+
+---
+
+<a id="security"></a>
+## 🔒 Security
+
+Please do **not** report security vulnerabilities in public GitHub issues. See [SECURITY.md](SECURITY.md) for how to report them responsibly.
 
 ---
 

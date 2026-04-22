@@ -5,6 +5,11 @@
 
   <h1>Casdoor</h1>
   <h3>AI-First Identity and Access Management (IAM) / AI MCP Gateway</h3>
+  <p align="center">
+    <strong>Languages:</strong>
+    <a href="README.md"><strong>English</strong></a> |
+    <a href="README.zh.md"><strong>简体中文</strong></a>
+  </p>
 
   <p align="center">
     <strong>An open-source, AI-first IAM / MCP gateway and authentication server with a web UI.</strong><br>
